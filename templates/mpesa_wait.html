@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Waiting for M-Pesa - SmartPark</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header>
+    <h1>🅿️ SmartPark</h1>
+    <nav>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('checkout_preview') }}">Exit / Pay</a>
+        <a href="{{ url_for('history') }}">History</a>
+    </nav>
+</header>
+<main>
+    <div class="barrier" id="wait-box">
+        <div class="spinner"></div>
+        <p>{{ payment.customer_message }}</p>
+        <p>Plate: <strong>{{ payment.plate_number }}</strong> &middot; Amount: <strong>Kshs. {{ payment.fee }}</strong></p>
+        <p id="status-text">Waiting for confirmation on the phone&hellip;</p>
+    </div>
+</main>
+
+<script>
+    const checkoutRequestId = {{ payment.checkout_request_id | tojson }};
+    const statusUrl = "{{ url_for('checkout_status', checkout_request_id='__ID__') }}".replace('__ID__', checkoutRequestId);
+    const checkoutUrl = "{{ url_for('checkout_preview') }}";
+    const receiptUrl = "{{ url_for('mpesa_receipt', checkout_request_id='__ID__') }}".replace('__ID__', checkoutRequestId);
+
+    async function poll() {
+        try {
+            const resp = await fetch(statusUrl);
+            const data = await resp.json();
+            const statusText = document.getElementById('status-text');
+
+            if (data.status === 'paid') {
+                statusText.textContent = 'Payment received! Redirecting...';
+                window.location.href = receiptUrl;
+                return;
+            }
+            if (data.status === 'failed') {
+                statusText.textContent = 'Payment was not completed. Redirecting to try again...';
+                setTimeout(() => { window.location.href = checkoutUrl; }, 2000);
+                return;
+            }
+        } catch (e) {
+            // network hiccup - just try again on the next tick
+        }
+        setTimeout(poll, 3000);
+    }
+    poll();
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>History - SmartPark</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header>
+    <h1>🅿️ SmartPark</h1>
+    <nav>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('checkout_preview') }}">Exit / Pay</a>
+        <a href="{{ url_for('history') }}">History</a>
+    </nav>
+</header>
+<main>
+    <h2>Recent Sessions</h2>
+    <table>
+        <tr>
+            <th>Plate</th><th>Slot</th><th>Entry</th><th>Exit</th><th>Fee (Kshs)</th><th>Status</th><th>Payment</th>
+        </tr>
+        {% for r in rows %}
+        <tr>
+            <td>{{ r.plate_number }}</td>
+            <td>{{ r.slot_number }}</td>
+            <td>{{ r.entry_time }}</td>
+            <td>{{ r.exit_time or '-' }}</td>
+            <td>{{ r.fee if r.fee is not none else '-' }}</td>
+            <td>{{ r.status }}</td>
+            <td>
+                {% if r.mpesa_receipt %}M-Pesa ({{ r.mpesa_receipt }})
+                {% elif r.payment_status == 'cash' %}Cash
+                {% elif r.payment_status == 'failed' %}Failed
+                {% elif r.payment_status == 'pending' %}Pending
+                {% else %}-{% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</main>
+</body>
+</html>

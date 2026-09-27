@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Exit / Pay - SmartPark</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header>
+    <h1>🅿️ SmartPark</h1>
+    <nav>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('checkout_preview') }}">Exit / Pay</a>
+        <a href="{{ url_for('history') }}">History</a>
+    </nav>
+</header>
+<main>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    <form class="panel" method="GET" action="{{ url_for('checkout_preview') }}">
+        <h2>Vehicle Exit</h2>
+        <input type="text" name="plate_number" placeholder="Enter number plate" value="{{ plate or '' }}" required>
+        <button type="submit">Look Up</button>
+    </form>
+
+    {% if preview %}
+    <div class="barrier">
+        <p>Plate: <strong>{{ preview.plate_number }}</strong></p>
+        <p>Entry time: {{ preview.entry_time.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+        <p>Duration so far: {{ preview.minutes }} minutes</p>
+        <p>Amount due: <strong>Kshs. {{ preview.fee }}</strong></p>
+
+        {% if preview.fee == 0 %}
+        <form method="POST" action="{{ url_for('checkout_confirm') }}">
+            <input type="hidden" name="plate_number" value="{{ preview.plate_number }}">
+            <button type="submit">Open Barrier (Free)</button>
+        </form>
+        {% else %}
+        <div class="payment-options">
+            <form method="POST" action="{{ url_for('checkout_mpesa') }}">
+                <input type="hidden" name="plate_number" value="{{ preview.plate_number }}">
+                <input type="tel" name="phone_number" placeholder="M-Pesa phone e.g. 0712345678" required>
+                <button type="submit">Pay with M-Pesa</button>
+            </form>
+            <form method="POST" action="{{ url_for('checkout_confirm') }}">
+                <input type="hidden" name="plate_number" value="{{ preview.plate_number }}">
+                <button type="submit" class="secondary">Confirm Cash Payment &amp; Open Barrier</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</main>
+</body>
+</html>

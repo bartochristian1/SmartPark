@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+parking.db
+venv/
+.env
+
+.env
+__pycache__/
+parking
+parking.db
+*.pyc

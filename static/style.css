@@ -1,0 +1,126 @@
+:root {
+    --green: #00A651;
+    --green-dark: #00733a;
+    --red: #e74c3c;
+    --dark: #0c0f0c;
+    --card: #171b17;
+    --accent: #00A651;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--dark);
+    color: #eef2ee;
+    margin: 0;
+    padding: 0 0 3rem 0;
+}
+
+header {
+    background: #000000;
+    padding: 1.2rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid var(--accent);
+}
+
+header h1 { margin: 0; font-size: 1.4rem; color: var(--green); }
+header nav a { color: #eef2ee; text-decoration: none; margin-left: 1.2rem; }
+header nav a:hover { color: var(--accent); }
+
+main { max-width: 900px; margin: 2rem auto; padding: 0 1.5rem; }
+
+.summary {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+.summary .box {
+    background: var(--card);
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    flex: 1;
+    text-align: center;
+    border: 1px solid #24291f;
+}
+.summary .box .num { font-size: 2rem; font-weight: bold; color: var(--green); }
+
+.slot-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 10px;
+    margin-bottom: 2rem;
+}
+.slot {
+    padding: 0.8rem 0.3rem;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.85rem;
+    color: #fff;
+}
+.slot.available { background: var(--green); }
+.slot.occupied { background: var(--red); }
+.slot small { display: block; font-weight: normal; font-size: 0.7rem; margin-top: 4px; }
+
+form.panel {
+    background: var(--card);
+    padding: 1.2rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    border: 1px solid #24291f;
+}
+form.panel h2 { margin-top: 0; font-size: 1.1rem; color: var(--green); }
+input[type=text], input[type=tel] {
+    padding: 0.6rem;
+    border-radius: 6px;
+    border: 1px solid #33402f;
+    background: #0c0f0c;
+    color: #eef2ee;
+    width: 60%;
+    margin-right: 0.5rem;
+}
+button {
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    border: none;
+    background: var(--accent);
+    color: #06170c;
+    font-weight: bold;
+    cursor: pointer;
+}
+button:hover { opacity: 0.88; }
+button.secondary { background: #22271f; color: #eef2ee; }
+
+.flash { padding: 0.8rem 1rem; border-radius: 8px; margin-bottom: 1rem; }
+.flash.success { background: #0f3d22; border: 1px solid var(--green); }
+.flash.error { background: #5c1e1e; border: 1px solid var(--red); }
+
+table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 8px; overflow: hidden; }
+th, td { padding: 0.6rem 0.8rem; text-align: left; border-bottom: 1px solid #24291f; }
+th { background: #000000; color: var(--green); }
+
+.barrier {
+    text-align: center;
+    padding: 2rem;
+    background: var(--card);
+    border-radius: 10px;
+    border: 1px solid #24291f;
+}
+.barrier .status { font-size: 2.5rem; color: var(--green); font-weight: bold; }
+.receipt-row { display: flex; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px dashed #24291f; }
+
+.payment-options { display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
+.payment-options form { flex: 1; min-width: 220px; }
+
+.spinner {
+    width: 42px; height: 42px;
+    border: 4px solid #24291f;
+    border-top-color: var(--green);
+    border-radius: 50%;
+    margin: 1rem auto;
+    animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
